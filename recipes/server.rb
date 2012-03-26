@@ -61,10 +61,9 @@ package node['mysql']['package_name'] do
   action :install
 end
 
-# This is a local patch, waiting on upstream: http://tickets.opscode.com/browse/COOK-1117
-directory "#{node['mysql']['conf_dir']}/conf.d" do
-  owner "mysql"
-  group "mysql"
+directory node['mysql']['confd_dir'] do
+  owner "mysql" unless platform? 'windows'
+  group "mysql" unless platform? 'windows'
   action :create
   recursive true
 end
@@ -106,8 +105,7 @@ ruby_block "save node data" do
   not_if { Chef::Config[:solo] }
 end
 
-
-# set the root password on platforms 
+# set the root password on platforms
 # that don't support pre-seeding
 unless platform?(%w{debian ubuntu})
 
