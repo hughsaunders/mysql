@@ -61,7 +61,8 @@ package node['mysql']['package_name'] do
   action :install
 end
 
-directory "#{node['mysql']['conf_dir']}/mysql/conf.d" do
+# This is a local patch, waiting on upstream: http://tickets.opscode.com/browse/COOK-1117
+directory "#{node['mysql']['conf_dir']}/conf.d" do
   owner "mysql"
   group "mysql"
   action :create
@@ -137,4 +138,13 @@ execute "mysql-install-privileges" do
   command "#{node['mysql']['mysql_bin']} -u root #{node['mysql']['server_root_password'].empty? ? '' : '-p' }\"#{node['mysql']['server_root_password']}\" < #{grants_path}"
   action :nothing
   subscribes :run, resources("template[#{grants_path}]"), :immediately
+end
+
+template "/root/.my.cnf" do
+  source "dotmycnf.erb"
+  owner "root"
+  group "root"
+  mode "0600"
+  not_if "test -f /root/.my.cnf"
+  variables :rootpasswd => node[:mysql][:server_root_password]
 end
