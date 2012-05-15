@@ -74,6 +74,8 @@ if attribute?('ec2')
   default['mysql']['ebs_vol_size'] = 50
 end
 
+default['mysql']['use_upstart'] = platform?("ubuntu") && node.platform_version.to_f >= 10.04
+
 default['mysql']['allow_remote_root']               = false
 default['mysql']['slow_query_log_on_indexes']       = true
 default['mysql']['tunable']['back_log']             = "128"
