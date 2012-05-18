@@ -148,3 +148,11 @@ template "/root/.my.cnf" do
   not_if "test -f /root/.my.cnf"
   variables :rootpasswd => node[:mysql][:server_root_password]
 end
+
+connection_info = {:host => node['mysql']['bind_address'], :username => "root", :password => node['mysql']['server_root_password'] }
+mysql_database_user 'anonymous' do
+  connection connection_info
+  username ''
+  host node["fqdn"]
+  action :drop
+end
