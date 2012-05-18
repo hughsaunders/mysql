@@ -42,6 +42,13 @@ mysql_packages.each do |mysql_pack|
   end
 end
 
+case node['platform']
+when "ubuntu", "debian"
+  package "build-essential" do
+    action :install
+  end
+end
+
 gem_package "mysql" do
   action :install
 end
