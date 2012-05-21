@@ -75,6 +75,8 @@ if attribute?('ec2')
 end
 
 default['mysql']['use_upstart'] = platform?("ubuntu") && node.platform_version.to_f >= 10.04
+default['mysql']['auto-increment-increment']        = 1
+default['mysql']['auto-increment-offset']           = 1
 
 default['mysql']['allow_remote_root']               = false
 default['mysql']['slow_query_log_on_indexes']       = true
