@@ -155,5 +155,5 @@ mysql_database_user 'anonymous' do
   username ''
   host node["fqdn"]
   action :drop
-  only_if { ` #{node['mysql']['mysql_bin']} -u root -p#{node['mysql']['server_root_password']} -D mysql -r -B -N -e \"SELECT COUNT(*) FROM user where User=''\"` }
+  only_if { ` #{node['mysql']['mysql_bin']} -u root -p#{node['mysql']['server_root_password']} -D mysql -r -B -N -e \"SELECT COUNT(*) FROM user where User='' and Host='#{node['fqdn']}'\"` }
 end
