@@ -98,14 +98,14 @@ template "#{node['mysql']['conf_dir']}/my.cnf" do
   variables :skip_federated => skip_federated
 end
 
-unless Chef::Config[:solo]
-  ruby_block "save node data" do
-    block do
-      node.save
-    end
-    action :create
+ruby_block "save node data" do
+  block do
+    node.save
   end
+  action :create
+  not_if { Chef::Config[:solo] }
 end
+
 
 # set the root password on platforms 
 # that don't support pre-seeding
@@ -146,7 +146,7 @@ template "/root/.my.cnf" do
   group "root"
   mode "0600"
   not_if "test -f /root/.my.cnf"
-  variables :rootpasswd => node[:mysql][:server_root_password]
+  variables :rootpasswd => node['mysql']['server_root_password']
 end
 
 connection_info = {:host => node['mysql']['bind_address'], :username => "root", :password => node['mysql']['server_root_password'] }
