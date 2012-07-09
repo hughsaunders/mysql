@@ -72,6 +72,7 @@ if attribute?('ec2')
 end
 
 default['mysql']['allow_remote_root']               = false
+default['mysql']['slow_query_log_on_indexes']       = true
 default['mysql']['tunable']['back_log']             = "128"
 default['mysql']['tunable']['key_buffer']           = "256M"
 default['mysql']['tunable']['max_allowed_packet']   = "16M"
