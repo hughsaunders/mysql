@@ -40,6 +40,7 @@ Attributes
 * `mysql['data_dir']` - Location for mysql data directory, default is "/var/lib/mysql"
 * `mysql['conf_dir']` - Location for mysql conf directory, default is "/etc/mysql"
 * `mysql['ec2_path']` - location of mysql data_dir on EC2 nodes, default "/mnt/mysql"
+* `mysql['slow_query_log_on_indexes']` - disable slow query logging for queries without indexes
 
 Performance tuning attributes, each corresponds to the same-named parameter in my.cnf; default values listed
 
