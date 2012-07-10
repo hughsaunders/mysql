@@ -31,6 +31,7 @@ when "centos", "redhat", "fedora", "suse", "scientific", "amazon"
   default['mysql']['mysql_bin']               = "/usr/bin/mysql"
 
   set['mysql']['conf_dir']                    = '/etc'
+  set['mysql']['confd_dir']                   = '/etc/mysql/conf.d'
   set['mysql']['socket']                      = "/var/lib/mysql/mysql.sock"
   set['mysql']['pid_file']                    = "/var/run/mysqld/mysqld.pid"
   set['mysql']['old_passwords']               = 1
@@ -45,6 +46,7 @@ when "freebsd"
   default['mysql']['mysql_bin']               = "/usr/local/bin/mysql"
 
   set['mysql']['conf_dir']                    = '/usr/local/etc'
+  set['mysql']['confd_dir']                   = '/usr/local/etc/mysql/conf.d'
   set['mysql']['socket']                      = "/tmp/mysqld.sock"
   set['mysql']['pid_file']                    = "/var/run/mysqld/mysqld.pid"
   set['mysql']['old_passwords']               = 0
@@ -59,6 +61,7 @@ else
   default['mysql']['mysql_bin']               = "/usr/bin/mysql"
 
   set['mysql']['conf_dir']                    = '/etc/mysql'
+  set['mysql']['confd_dir']                   = '/etc/mysql/conf.d'
   set['mysql']['socket']                      = "/var/run/mysqld/mysqld.sock"
   set['mysql']['pid_file']                    = "/var/run/mysqld/mysqld.pid"
   set['mysql']['old_passwords']               = 0
@@ -70,6 +73,10 @@ if attribute?('ec2')
   default['mysql']['ebs_vol_dev'] = "/dev/sdi"
   default['mysql']['ebs_vol_size'] = 50
 end
+
+default['mysql']['use_upstart'] = platform?('ubuntu') && node['platform_version'].to_f >= 10.04
+default['mysql']['auto-increment-increment']        = 1
+default['mysql']['auto-increment-offset']           = 1
 
 default['mysql']['allow_remote_root']               = false
 default['mysql']['slow_query_log_on_indexes']       = true
@@ -89,6 +96,27 @@ default['mysql']['tunable']['thread_concurrency']   = 10
 default['mysql']['tunable']['thread_stack']         = "256K"
 default['mysql']['tunable']['wait_timeout']         = "180"
 
+default['mysql']['tunable']['log_bin']                         = nil
+default['mysql']['tunable']['log_bin_trust_function_creators'] = false
+default['mysql']['tunable']['relay_log']                       =  nil
+default['mysql']['tunable']['log_slave_updates']               = false
+default['mysql']['tunable']['sync_binlog']                     = 0
+default['mysql']['tunable']['skip_slave_start']                = false
+
+default['mysql']['tunable']['log_error']                       = nil
+default['mysql']['tunable']['log_queries_not_using_index']     = true
+default['mysql']['tunable']['log_bin_trust_function_creators'] = false
+
+default['mysql']['tunable']['innodb_buffer_pool_size']         = "128M"
+default['mysql']['tunable']['innodb_log_file_size']            = "5M"
+default['mysql']['tunable']['innodb_buffer_pool_size']         = "128M"
+default['mysql']['tunable']['innodb_additional_mem_pool_size'] = "8M"
+default['mysql']['tunable']['innodb_data_file_path']           = "ibdata1:10M:autoextend"
+default['mysql']['tunable']['innodb_flush_log_at_trx_commit']  = "1"
+default['mysql']['tunable']['innodb_flush_method']             = "fdatasync"
+default['mysql']['tunable']['innodb_log_buffer_size']          = "8M"
+default['mysql']['tunable']['innodb_adaptive_flushing']        = "true"
+
 default['mysql']['tunable']['query_cache_limit']    = "1M"
 default['mysql']['tunable']['query_cache_size']     = "16M"
 
@@ -97,5 +125,3 @@ default['mysql']['tunable']['long_query_time']      = 2
 
 default['mysql']['tunable']['expire_logs_days']     = 10
 default['mysql']['tunable']['max_binlog_size']      = "100M"
-
-default['mysql']['tunable']['innodb_buffer_pool_size']  = "256M"
