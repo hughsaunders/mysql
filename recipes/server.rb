@@ -147,10 +147,30 @@ template "/root/.my.cnf" do
   variables :rootpasswd => node['mysql']['server_root_password']
 end
 
-connection_info = {:host => node['mysql']['bind_address'], :username => "root", :password => node['mysql']['server_root_password'] }
-mysql_database_user 'anonymous' do
-  connection connection_info
-  username ''
-  host node["fqdn"]
-  action :drop
+# README(shep): Seriously redhat is doing it wrong
+if platform?(%w{redhat})
+  connection_info = {:host => node['mysql']['bind_address'], :username => "root", :password => '' }
+  mysql_database "Drop '<blank_user>'@#{node['fqdn']} user with blank password" do
+    connection connection_info
+    database_name "mysql"
+    sql "delete from mysql.user where user='' and host='#{node['fqdn']}' and password=''"
+    action :query
+  end
+  connection_info = {:host => node['mysql']['bind_address'], :username => "root", :password => '' }
+  mysql_database "Drop root@#{node['fqdn']} user with blank password" do
+    connection connection_info
+    database_name "mysql"
+    sql "delete from mysql.user where user='root' and host='#{node['fqdn']}' and password=''"
+    action :query
+  end
+end
+
+if platform?(%w{debian ubuntu})
+  connection_info = {:host => node['mysql']['bind_address'], :username => "root", :password => node['mysql']['server_root_password'] }
+  mysql_database_user 'anonymous' do
+    connection connection_info
+    username ''
+    host node['fqdn']
+    action :drop
+  end
 end

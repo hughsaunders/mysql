@@ -143,7 +143,9 @@ innodb_flush_log_at_trx_commit = <%= node['mysql']['tunable']['innodb_flush_log_
 # NOTE(shep): Commenting out due to BUG: https://github.com/opscode-cookbooks/mysql/pull/17
 # innodb_flush_method     = <%= node['mysql']['tunable']['innodb_flush_method'] %>
 innodb_log_buffer_size  = <%= node['mysql']['tunable']['innodb_log_buffer_size'] %>
+<%- if node["platform"] != "redhat" %>
 innodb_adaptive_flushing  = <%= node['mysql']['tunable']['innodb_adaptive_flushing'] %>
+<%- end %>
 
 <% if @skip_federated %>
 #
