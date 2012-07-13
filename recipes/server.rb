@@ -153,14 +153,14 @@ if platform?(%w{redhat})
   mysql_database "Drop '<blank_user>'@#{node['fqdn']} user with blank password" do
     connection connection_info
     database_name "mysql"
-    sql "delete from mysql.user where user='' and host='#{node.fqdn}' and password=''"
+    sql "delete from mysql.user where user='' and host='#{node['fqdn']}' and password=''"
     action :query
   end
   connection_info = {:host => node['mysql']['bind_address'], :username => "root", :password => '' }
   mysql_database "Drop root@#{node['fqdn']} user with blank password" do
     connection connection_info
     database_name "mysql"
-    sql "delete from mysql.user where user='root' and host='#{node.fqdn}' and password=''"
+    sql "delete from mysql.user where user='root' and host='#{node['fqdn']}' and password=''"
     action :query
   end
 end
