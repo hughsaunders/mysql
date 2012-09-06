@@ -51,6 +51,7 @@ basedir         = <%= node['mysql']['basedir'] %>
 datadir         = <%= node['mysql']['data_dir'] %>
 tmpdir          = /tmp
 skip-external-locking
+skip-name-resolve
 #
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
